@@ -37,7 +37,7 @@ model User {
   profilePic  String?
     otp         String?     
   otpExpires  DateTime?   
-  userType    UserType
+  userType    UserType @default(USER)
   userStatus  UserStatus
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt  
