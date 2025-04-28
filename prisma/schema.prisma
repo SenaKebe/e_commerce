@@ -42,23 +42,19 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt  
 
+  buyerConversations    Conversation[] @relation("Buyer")
+  merchantConversations Conversation[] @relation("Merchant")
   product Product[]
   order Order[]
   cartItem CartItem[] 
   // services    Service[]
 }
 
-
-
-
-
-
 enum UserStatus {
   ACTIVE
   INACTIVE
   DEACTIVATED
 }
-
 
 enum ListingType {
   ECOMMERCE   // Products sold directly online
@@ -70,8 +66,6 @@ enum BrokerageType {
   SALE
   RENT
 }
-
-
 
 model Category {
   id            String         @id @default(auto()) @map("_id") @db.ObjectId
@@ -131,6 +125,7 @@ model Product {
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
+  conversations  Conversation[]
   cartItem       CartItem[]
     orderItem OrderItem[]
 }
@@ -189,4 +184,29 @@ enum PaymentStatus {
   PENDING
   SUCCESS
   FAILED
+}
+
+model Conversation {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+  buyerId       String  
+  buyer         User     @relation("Buyer", fields: [buyerId], references: [id])
+  merchantId    String  
+  merchant      User     @relation("Merchant", fields: [merchantId], references: [id])
+  messages      Message[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([productId, buyerId, merchantId]) // One negotiation per product per buyer
+}
+
+model Message {
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  content        String
+  createdAt      DateTime     @default(now())
 }
