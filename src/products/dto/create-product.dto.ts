@@ -39,6 +39,6 @@ export class CreateProductDto {
   description?: string;
 
   @IsOptional()
-  @IsString()
-  imageUrl?: string;
+  @IsString({ each: true })
+  imageUrls?: string[];
 }

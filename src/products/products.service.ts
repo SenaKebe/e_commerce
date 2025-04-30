@@ -59,7 +59,10 @@ export class ProductsService {
             connect: { id: data.subCategoryId },
           },
           description: data.description || '',
-          imageUrl: data.imageUrl || null,
+          imageUrls: {
+            set: data.imageUrls || [],
+          },
+
           user: {
             connect: { id: userId },
           },
@@ -76,7 +79,7 @@ export class ProductsService {
           price: true,
           quantity: true,
           description: true,
-          imageUrl: true,
+          imageUrls: true,
           listingType: true,
           brokerageType: true,
           attributes: true,
@@ -112,7 +115,7 @@ export class ProductsService {
         name: true,
         price: true,
         description: true,
-        imageUrl: true,
+        imageUrls: true,
         listingType: true,
         brokerageType: true,
         attributes: true,
@@ -145,7 +148,7 @@ export class ProductsService {
         name: true,
         price: true,
         description: true,
-        imageUrl: true,
+        imageUrls: true,
         listingType: true,
         brokerageType: true,
         attributes: true,
@@ -215,7 +218,7 @@ export class ProductsService {
       listingType: data.listingType as ListingType,
       attributes: Object.keys(attributes).length ? attributes : undefined,
       description: data.description || undefined,
-      imageUrl: data.imageUrl || undefined,
+      imageUrls: { set: data.imageUrls || [] },
     };
 
     try {
@@ -231,7 +234,7 @@ export class ProductsService {
           name: true,
           price: true,
           description: true,
-          imageUrl: true,
+          imageUrls: true,
           listingType: true,
           brokerageType: true,
           attributes: true,

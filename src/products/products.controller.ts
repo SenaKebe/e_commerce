@@ -10,12 +10,13 @@ import {
   UploadedFile,
   UseInterceptors,
   UseGuards,
+  UploadedFiles,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import { BadRequestException } from '@nestjs/common';
 import { AuthenticatedRequest } from 'src/types/express';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -36,7 +37,7 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Roles('MERCHANT', 'ADMIN')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FilesInterceptor('images'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Create Product with Image',
@@ -57,21 +58,24 @@ export class ProductsController {
           type: 'object',
           example: { color: 'black', storage: '128GB' },
         },
-        image: { type: 'string', format: 'binary' },
+        images: {
+          type: 'array',
+          items: { type: 'string', format: 'binary' },
+        },
       },
     },
   })
   async create(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() files: Express.Multer.File[],
     @Body() createProductDto: CreateProductDto,
     @Req() req: AuthenticatedRequest,
   ) {
-    const imageUrl = file
-      ? await this.cloudinaryService.uploadImage(file)
+    const imageUrls = files
+      ? await this.cloudinaryService.uploadImage(files)
       : undefined;
 
     return this.productsService.create(
-      { ...createProductDto, imageUrl },
+      { ...createProductDto, imageUrls },
       req.user.userId,
     );
   }
@@ -106,22 +110,25 @@ export class ProductsController {
         subCategoryId: { type: 'string' },
         description: { type: 'string' },
         attributes: { type: 'object' },
-        image: { type: 'string', format: 'binary' },
+        images: {
+          type: 'array',
+          items: { type: 'string', format: 'binary' },
+        },
       },
     },
   })
   async update(
     @Param('id') id: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() files: Express.Multer.File[],
     @Body() updateProductDto: UpdateProductDto,
   ) {
-    const imageUrl = file
-      ? await this.cloudinaryService.uploadImage(file)
+    const imageUrls = files
+      ? await this.cloudinaryService.uploadImage(files)
       : undefined;
 
     return this.productsService.update(id, {
       ...updateProductDto,
-      imageUrl,
+      imageUrls,
     });
   }
 

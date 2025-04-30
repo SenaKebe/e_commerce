@@ -117,7 +117,7 @@ model Product {
   name           String
   price          Float
   description    String?
-  imageUrl       String?
+  imageUrls       String[]
   quantity       Int @default(1)
   listingType    ListingType
   brokerageType  BrokerageType?
