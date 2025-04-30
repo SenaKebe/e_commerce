@@ -17,37 +17,38 @@ import { RolesGuard } from '../auth/roles.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('subcategories')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@ApiBearerAuth()
 export class SubcategoriesController {
   constructor(private readonly service: SubcategoriesService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   @Roles('ADMIN')
+  @ApiBearerAuth()
   create(@Body() dto: CreateSubcategoryDto) {
     return this.service.create(dto);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.service.findAll();
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.service.findOne(id);
   }
-
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':id')
   @Roles('ADMIN')
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() dto: UpdateSubcategoryDto) {
     return this.service.update(id, dto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   @Roles('ADMIN')
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.service.remove(id);
   }

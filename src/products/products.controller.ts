@@ -76,15 +76,11 @@ export class ProductsController {
     );
   }
   @Get()
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   findAll() {
     return this.productsService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
   }

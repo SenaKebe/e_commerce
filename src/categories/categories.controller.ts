@@ -17,12 +17,12 @@ import { RolesGuard } from '../auth/roles.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('categories')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@ApiBearerAuth()
 export class CategoriesController {
   constructor(private readonly service: CategoriesService) {}
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   @Roles('ADMIN')
+  @ApiBearerAuth()
   create(@Body() dto: CreateCategoryDto) {
     return this.service.create(dto);
   }
@@ -36,13 +36,15 @@ export class CategoriesController {
   findOne(@Param('id') id: string) {
     return this.service.findOne(id);
   }
-
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':id')
   @Roles('ADMIN')
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
     return this.service.update(id, dto);
   }
-
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   @Roles('ADMIN')
   remove(@Param('id') id: string) {
