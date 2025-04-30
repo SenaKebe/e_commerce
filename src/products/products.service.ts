@@ -14,7 +14,10 @@ import { ObjectId } from 'bson';
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateProductDto & { imageUrl?: string }, userId: string) {
+  async create(
+    data: CreateProductDto & { imageUrls?: string[] },
+    userId: string,
+  ) {
     data.price = Number(data.price);
     data.quantity = Number(data.quantity);
     console.log('Incoming data:', data);

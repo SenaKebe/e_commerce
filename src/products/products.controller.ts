@@ -75,7 +75,7 @@ export class ProductsController {
       : undefined;
 
     return this.productsService.create(
-      { ...createProductDto, imageUrls },
+      { ...createProductDto, imageUrls } as CreateProductDto,
       req.user.userId,
     );
   }
