@@ -62,9 +62,7 @@ export class ProductsService {
             connect: { id: data.subCategoryId },
           },
           description: data.description || '',
-          imageUrls: {
-            set: data.imageUrls || [],
-          },
+          imageUrls: data.imageUrls || [],
 
           user: {
             connect: { id: userId },
@@ -221,7 +219,7 @@ export class ProductsService {
       listingType: data.listingType as ListingType,
       attributes: Object.keys(attributes).length ? attributes : undefined,
       description: data.description || undefined,
-      imageUrls: { set: data.imageUrls || [] },
+      imageUrls: data.imageUrls || undefined, // or just pass the array directly
     };
 
     try {
